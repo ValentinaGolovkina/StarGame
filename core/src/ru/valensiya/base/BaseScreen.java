@@ -14,7 +14,6 @@ import ru.valensiya.math.Rect;
 
 public class BaseScreen implements Screen, InputProcessor {
     protected SpriteBatch batch;
-    private Texture background;
 
     private Rect screenBounds;
     private Rect glBounds;
@@ -30,7 +29,6 @@ public class BaseScreen implements Screen, InputProcessor {
     public void show() {
         Gdx.input.setInputProcessor(this);
         batch = new SpriteBatch();
-        //background = new Texture("background_cosmos.jpg");
         screenBounds = new Rect();
         glBounds = new Rect(0,0,1f,1f);
         worldBounds = new Rect();
@@ -41,10 +39,6 @@ public class BaseScreen implements Screen, InputProcessor {
 
     @Override
     public void render(float delta) {
-//        batch.begin();
-//        batch.draw(background, 0, 0);
-//        batch.end();
-
     }
 
     @Override
@@ -85,8 +79,6 @@ public class BaseScreen implements Screen, InputProcessor {
     @Override
     public void dispose() {
         batch.dispose();
-        //background.dispose();
-
     }
 
     @Override
