@@ -8,8 +8,9 @@ import com.badlogic.gdx.math.Vector2;
 
 import ru.valensiya.base.BaseScreen;
 import ru.valensiya.math.Rect;
+import ru.valensiya.pool.BulletPool;
 import ru.valensiya.sprite.Background;
-import ru.valensiya.sprite.Spaceship;
+import ru.valensiya.sprite.MainShip;
 import ru.valensiya.sprite.Star;
 
 public class GameScreen extends BaseScreen {
@@ -21,7 +22,8 @@ public class GameScreen extends BaseScreen {
 
     private Background background;
     private Star[] stars;
-    private Spaceship spaceship;
+    private MainShip mainShip;
+    private BulletPool bulletPool;
 
     @Override
     public void show() {
@@ -33,12 +35,14 @@ public class GameScreen extends BaseScreen {
         for(int i=0;i<STAR_COUNT;i++){
             stars[i] = new Star(atlas);
         }
-        spaceship = new Spaceship(atlas.findRegion("main_ship"));
+        bulletPool = new BulletPool();
+        mainShip = new MainShip(atlas,bulletPool);
     }
 
     @Override
     public void render(float delta) {
         update(delta);
+        freeAllDestroyed();
         draw();
     }
 
@@ -47,45 +51,52 @@ public class GameScreen extends BaseScreen {
         background.resize(worldBounds);
         for(Star star:stars)
             star.resize(worldBounds);
-        spaceship.resize(worldBounds);
+        mainShip.resize(worldBounds);
     }
 
     @Override
     public void dispose() {
         bg.dispose();
         atlas.dispose();
+        bulletPool.dispose();
         super.dispose();
     }
 
     @Override
     public boolean keyDown(int keycode) {
-        spaceship.keyDown(keycode);
+        mainShip.keyDown(keycode);
         return false;
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        spaceship.keyUp(keycode);
+        mainShip.keyUp(keycode);
         return false;
     }
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
-        spaceship.touchDown(touch,pointer,button);
+        mainShip.touchDown(touch,pointer,button);
         return false;
     }
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer, int button) {
-        spaceship.touchUp(touch,pointer,button);
+        mainShip.touchUp(touch,pointer,button);
         return false;
     }
 
     public void update(float delta){
         for(Star star:stars)
             star.update(delta);
-        spaceship.update(delta);
+        mainShip.update(delta);
+        bulletPool.updateActiveSprites(delta);
     }
+
+    private void freeAllDestroyed(){
+        bulletPool.freeDestroyedActiveSprites();
+    }
+
     public void draw(){
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -93,7 +104,8 @@ public class GameScreen extends BaseScreen {
         background.draw(batch);
         for(Star star:stars)
             star.draw(batch);
-        spaceship.draw(batch);
+        mainShip.draw(batch);
+        bulletPool.drawActiveSprites(batch);
         batch.end();
     }
 }
