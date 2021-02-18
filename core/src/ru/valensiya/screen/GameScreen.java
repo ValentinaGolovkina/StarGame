@@ -1,6 +1,7 @@
 package ru.valensiya.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -24,19 +25,21 @@ public class GameScreen extends BaseScreen {
     private Star[] stars;
     private MainShip mainShip;
     private BulletPool bulletPool;
+    private Sound soundShot;
 
     @Override
     public void show() {
         super.show();
         bg = new Texture("textures/background_cosmos.jpg");
         atlas = new TextureAtlas(Gdx.files.internal("textures/mainAtlas.tpack"));
+        soundShot = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
         background = new Background(bg);
         stars = new Star[STAR_COUNT];
         for(int i=0;i<STAR_COUNT;i++){
             stars[i] = new Star(atlas);
         }
         bulletPool = new BulletPool();
-        mainShip = new MainShip(atlas,bulletPool);
+        mainShip = new MainShip(atlas,bulletPool,soundShot);
     }
 
     @Override
@@ -59,6 +62,7 @@ public class GameScreen extends BaseScreen {
         bg.dispose();
         atlas.dispose();
         bulletPool.dispose();
+        soundShot.dispose();
         super.dispose();
     }
 
