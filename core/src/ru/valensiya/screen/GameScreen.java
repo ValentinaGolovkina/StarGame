@@ -1,6 +1,7 @@
 package ru.valensiya.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import ru.valensiya.base.BaseScreen;
 import ru.valensiya.math.Rect;
 import ru.valensiya.pool.BulletPool;
+import ru.valensiya.pool.EnemyPool;
 import ru.valensiya.sprite.Background;
 import ru.valensiya.sprite.MainShip;
 import ru.valensiya.sprite.Star;
@@ -24,19 +26,23 @@ public class GameScreen extends BaseScreen {
     private Star[] stars;
     private MainShip mainShip;
     private BulletPool bulletPool;
+    private Sound soundShot;
+    private EnemyPool enemyPool;
 
     @Override
     public void show() {
         super.show();
         bg = new Texture("textures/background_cosmos.jpg");
         atlas = new TextureAtlas(Gdx.files.internal("textures/mainAtlas.tpack"));
+        soundShot = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
         background = new Background(bg);
         stars = new Star[STAR_COUNT];
         for(int i=0;i<STAR_COUNT;i++){
             stars[i] = new Star(atlas);
         }
         bulletPool = new BulletPool();
-        mainShip = new MainShip(atlas,bulletPool);
+        mainShip = new MainShip(atlas,bulletPool,soundShot);
+        enemyPool = new EnemyPool(atlas);
     }
 
     @Override
@@ -52,6 +58,7 @@ public class GameScreen extends BaseScreen {
         for(Star star:stars)
             star.resize(worldBounds);
         mainShip.resize(worldBounds);
+        enemyPool.resize(worldBounds);
     }
 
     @Override
@@ -59,6 +66,8 @@ public class GameScreen extends BaseScreen {
         bg.dispose();
         atlas.dispose();
         bulletPool.dispose();
+        soundShot.dispose();
+        enemyPool.dispose();
         super.dispose();
     }
 
@@ -91,10 +100,12 @@ public class GameScreen extends BaseScreen {
             star.update(delta);
         mainShip.update(delta);
         bulletPool.updateActiveSprites(delta);
+        enemyPool.updateActiveSprites(delta);
     }
 
     private void freeAllDestroyed(){
         bulletPool.freeDestroyedActiveSprites();
+        enemyPool.freeDestroyedActiveSprites();
     }
 
     public void draw(){
@@ -106,6 +117,7 @@ public class GameScreen extends BaseScreen {
             star.draw(batch);
         mainShip.draw(batch);
         bulletPool.drawActiveSprites(batch);
+        enemyPool.drawActiveSprites(batch);
         batch.end();
     }
 }

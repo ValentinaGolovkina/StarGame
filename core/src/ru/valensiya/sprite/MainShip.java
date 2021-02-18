@@ -1,6 +1,8 @@
 package ru.valensiya.sprite;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -29,11 +31,13 @@ public class MainShip extends Sprite {
     private TextureRegion bulletRegion;
     private Vector2 bulletV;
     private Vector2 bulletPos;
+    private Sound soundShot;
 
-    public MainShip(TextureAtlas atlas, BulletPool bulletPool) {
+    public MainShip(TextureAtlas atlas, BulletPool bulletPool, Sound soundShot) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
         this.bulletPool = bulletPool;
         this.bulletRegion = atlas.findRegion("bulletMainShip");
+        this.soundShot = soundShot;
         bulletV = new Vector2(0, 0.5f);
         bulletPos = new Vector2();
         reloadInterval = 0.15f;
@@ -157,5 +161,6 @@ public class MainShip extends Sprite {
         Bullet bullet = bulletPool.obtain();
         bulletPos.set(pos.x, getTop());
         bullet.set(this, bulletRegion,bulletPos,bulletV,0.01f,worldBounds,1);
+        soundShot.play(1.0f);
     }
 }
