@@ -23,7 +23,6 @@ public class MenuScreen extends BaseScreen {
 
     private Texture bg;
     private TextureAtlas atlas;
-    private TextureAtlas atlasBt;
 
     private Background background;
     private Star[] stars;

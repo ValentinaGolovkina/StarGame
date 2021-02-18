@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import ru.valensiya.base.BaseScreen;
 import ru.valensiya.math.Rect;
 import ru.valensiya.pool.BulletPool;
+import ru.valensiya.pool.EnemyPool;
 import ru.valensiya.sprite.Background;
 import ru.valensiya.sprite.MainShip;
 import ru.valensiya.sprite.Star;
@@ -26,6 +27,7 @@ public class GameScreen extends BaseScreen {
     private MainShip mainShip;
     private BulletPool bulletPool;
     private Sound soundShot;
+    private EnemyPool enemyPool;
 
     @Override
     public void show() {
@@ -40,6 +42,7 @@ public class GameScreen extends BaseScreen {
         }
         bulletPool = new BulletPool();
         mainShip = new MainShip(atlas,bulletPool,soundShot);
+        enemyPool = new EnemyPool(atlas);
     }
 
     @Override
@@ -55,6 +58,7 @@ public class GameScreen extends BaseScreen {
         for(Star star:stars)
             star.resize(worldBounds);
         mainShip.resize(worldBounds);
+        enemyPool.resize(worldBounds);
     }
 
     @Override
@@ -63,6 +67,7 @@ public class GameScreen extends BaseScreen {
         atlas.dispose();
         bulletPool.dispose();
         soundShot.dispose();
+        enemyPool.dispose();
         super.dispose();
     }
 
@@ -95,10 +100,12 @@ public class GameScreen extends BaseScreen {
             star.update(delta);
         mainShip.update(delta);
         bulletPool.updateActiveSprites(delta);
+        enemyPool.updateActiveSprites(delta);
     }
 
     private void freeAllDestroyed(){
         bulletPool.freeDestroyedActiveSprites();
+        enemyPool.freeDestroyedActiveSprites();
     }
 
     public void draw(){
@@ -110,6 +117,7 @@ public class GameScreen extends BaseScreen {
             star.draw(batch);
         mainShip.draw(batch);
         bulletPool.drawActiveSprites(batch);
+        enemyPool.drawActiveSprites(batch);
         batch.end();
     }
 }
