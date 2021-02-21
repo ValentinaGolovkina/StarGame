@@ -10,6 +10,8 @@ import ru.valensiya.pool.BulletPool;
 
 public class EnemyShip extends Ship {
 
+    private boolean modeFight;
+
     public EnemyShip(BulletPool bulletPool, Rect worldBounds, Sound sound) {
         this.bulletPool = bulletPool;
         this.worldBounds=worldBounds;
@@ -22,6 +24,13 @@ public class EnemyShip extends Ship {
 
     @Override
     public void update(float delta) {
+        if(!modeFight){
+            if(getTop()<worldBounds.getTop()){
+                v.set(v0);
+                this.reloadTimer=reloadInterval;
+                modeFight=true;
+            }
+        }
         super.update(delta);
         bulletPos.set(pos.x, getBottom());
         if(getBottom()<worldBounds.getBottom()){
@@ -41,7 +50,8 @@ public class EnemyShip extends Ship {
             int hp
     ){
         this.regions=regions;
-        this.v.set(v0);
+        this.v0.set(v0);
+        this.v.set(new Vector2(0,-0.3f));
         this.bulletRegion=bulletRegion;
         this.bulletHeight=bulletHeight;
         this.bulletV.set(bulletV);
@@ -49,5 +59,6 @@ public class EnemyShip extends Ship {
         this.reloadInterval=reloadInterval;
         setHeightProportion(height);
         this.hp=hp;
+        this.modeFight=false;
     }
 }
