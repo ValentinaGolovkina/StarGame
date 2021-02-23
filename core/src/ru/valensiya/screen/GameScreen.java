@@ -18,6 +18,7 @@ import ru.valensiya.pool.ExplosionPool;
 import ru.valensiya.sprite.Background;
 import ru.valensiya.sprite.Bullet;
 import ru.valensiya.sprite.EnemyShip;
+import ru.valensiya.sprite.GameOver;
 import ru.valensiya.sprite.MainShip;
 import ru.valensiya.sprite.Star;
 import ru.valensiya.utils.EnemyEnitter;
@@ -41,6 +42,7 @@ public class GameScreen extends BaseScreen {
     private Sound explosionSound;
 
     private EnemyEnitter enemyEnitter;
+    private GameOver gameOver;
 
     @Override
     public void show() {
@@ -58,6 +60,7 @@ public class GameScreen extends BaseScreen {
         enemyBulletSound=Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
         enemyPool = new EnemyPool(bulletPool,explosionPool, worldBounds,enemyBulletSound);
         mainShip = new MainShip(atlas,bulletPool,explosionPool);
+        gameOver = new GameOver(atlas);
 
         enemyEnitter = new EnemyEnitter(atlas,worldBounds,enemyPool);
 
@@ -123,11 +126,13 @@ public class GameScreen extends BaseScreen {
     public void update(float delta){
         for(Star star:stars)
             star.update(delta);
-        mainShip.update(delta);
-        bulletPool.updateActiveSprites(delta);
+        if(!mainShip.isDestroyed()){
+            mainShip.update(delta);
+            bulletPool.updateActiveSprites(delta);
+            enemyPool.updateActiveSprites(delta);
+            enemyEnitter.generate(delta);
+        }
         explosionPool.updateActiveSprites(delta);
-        enemyPool.updateActiveSprites(delta);
-        enemyEnitter.generate(delta);
     }
 
     private void checkCollisions() {
@@ -180,10 +185,14 @@ public class GameScreen extends BaseScreen {
         background.draw(batch);
         for(Star star:stars)
             star.draw(batch);
+        if(!mainShip.isDestroyed()){
         mainShip.draw(batch);
         bulletPool.drawActiveSprites(batch);
-        explosionPool.drawActiveSprites(batch);
         enemyPool.drawActiveSprites(batch);
+        } else {
+            gameOver.draw(batch);
+        }
+        explosionPool.drawActiveSprites(batch);
         batch.end();
     }
 }
