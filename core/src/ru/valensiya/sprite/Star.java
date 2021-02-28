@@ -9,7 +9,7 @@ import ru.valensiya.math.Rnd;
 
 public class Star extends Sprite {
 
-    private final Vector2 speed;
+    protected final Vector2 speed;
     private Rect worldBounds;
 
     public  Star(TextureAtlas atlas){
@@ -21,6 +21,10 @@ public class Star extends Sprite {
     @Override
     public void update(float delta) {
         pos.mulAdd(speed,delta);
+        checkBounds();
+    }
+
+    public void checkBounds(){
         if(getRight()<worldBounds.getLeft()){
             setLeft(worldBounds.getRight());
         }
