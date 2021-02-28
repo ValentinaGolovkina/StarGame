@@ -67,6 +67,11 @@ public class EnemyEnitter {
             generateTimer =0f;
             EnemyShip enemyShip = enemyPool.obtain();
             float enemyType = (float) Math.random();
+            if(level<5){
+                enemyType=0.0f;
+            } else if(level<10 && enemyType>0.8f){
+                enemyType = 0.7f;
+            }
             if(enemyType<0.5f) {
                 enemyShip.set(
                         enemySmallRegions,
@@ -86,7 +91,7 @@ public class EnemyEnitter {
                         bulletRegion,
                         ENEMY_MEDIUM_BULLET_HEIGHT,
                         enemyMediumBulletV,
-                        ENEMY_MEDIUM_BULLET_DAMAGE+level,
+                        ENEMY_MEDIUM_BULLET_DAMAGE+level-5,
                         ENEMY_MEDIUM_RELOAD_INTERVAL,
                         ENEMY_MEDIUM_HEIGHT,
                         ENEMY_MEDIUM_HP
@@ -98,7 +103,7 @@ public class EnemyEnitter {
                         bulletRegion,
                         ENEMY_BIG_BULLET_HEIGHT,
                         enemyBigBulletV,
-                        ENEMY_BIG_BULLET_DAMAGE+level,
+                        ENEMY_BIG_BULLET_DAMAGE+level-10,
                         ENEMY_BIG_RELOAD_INTERVAL,
                         ENEMY_BIG_HEIGHT,
                         ENEMY_BIG_HP

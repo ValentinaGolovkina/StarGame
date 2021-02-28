@@ -177,7 +177,7 @@ public class GameScreen extends BaseScreen {
 
     public void update(float delta){
         for(TrackStar star:stars)
-            star.update(delta,mainShip.getV());
+            star.update(delta);
         explosionPool.updateActiveSprites(delta);
         if(state==State.PLAYING) {
             mainShip.update(delta);
