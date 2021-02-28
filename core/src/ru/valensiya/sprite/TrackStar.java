@@ -14,7 +14,7 @@ public class TrackStar extends Star{
         sumV=new Vector2();
     }
 
-    public void update(float delta,Vector2 trackingV) {
+    public void update(float delta) {
         sumV.setZero().mulAdd(trackingV,0.2f).rotate(180).add(speed);
         pos.mulAdd(sumV,delta);
         checkBounds();
